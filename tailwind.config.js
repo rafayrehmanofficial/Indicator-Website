@@ -42,12 +42,17 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(6px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         blink: 'blink 1.05s steps(1) infinite',
         flicker: 'flicker 6s linear infinite',
         scan: 'scan 7s linear infinite',
         slideup: 'slideup 260ms ease-out both',
+        marquee: 'marquee 32s linear infinite',
       },
     },
   },

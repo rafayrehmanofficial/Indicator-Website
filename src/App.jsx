@@ -1,4 +1,5 @@
 import Nav from './components/Nav'
+import Ticker from './components/Ticker'
 import Hero from './components/Hero'
 import Tape from './components/Tape'
 import Stats from './components/Stats'
@@ -17,7 +18,10 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Tape />
+        <Ticker />
+        <section className="shell py-10 sm:py-14">
+          <Tape />
+        </section>
         <Stats />
         <Proof />
         <Method />

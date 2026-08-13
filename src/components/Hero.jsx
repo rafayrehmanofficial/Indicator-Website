@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Cursor } from './ui'
+import LiveChart from './LiveChart'
 import { waLink, VERSION } from '../config'
 
 const BOOT = [
@@ -10,44 +11,43 @@ const BOOT = [
   { t: 'access control', r: 'RESTRICTED', warn: true },
 ]
 
-function useBootSequence() {
-  const reduce = useMemo(
-    () =>
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    []
-  )
-  const [line, setLine] = useState(reduce ? BOOT.length : 0)
-  const [chars, setChars] = useState(reduce ? 999 : 0)
+// The boot animation is the first thing people see — it runs for everyone.
+// Reduced-motion users just get a faster type speed, not a frozen screen.
+function useBoot() {
+  const reduce =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const speed = reduce ? 3 : 11
+  const [line, setLine] = useState(0)
+  const [chars, setChars] = useState(0)
 
   useEffect(() => {
-    if (reduce) return
     if (line >= BOOT.length) return
     const text = BOOT[line].t
     if (chars < text.length) {
-      const id = setTimeout(() => setChars((c) => c + 1), 11)
+      const id = setTimeout(() => setChars((c) => c + 1), speed)
       return () => clearTimeout(id)
     }
     const id = setTimeout(() => {
       setLine((l) => l + 1)
       setChars(0)
-    }, 130)
+    }, reduce ? 60 : 130)
     return () => clearTimeout(id)
-  }, [line, chars, reduce])
+  }, [line, chars, speed, reduce])
 
   return { line, chars, done: line >= BOOT.length }
 }
 
 export default function Hero() {
-  const { line, chars, done } = useBootSequence()
+  const { line, chars, done } = useBoot()
 
   return (
     <section id="top" className="relative overflow-hidden pt-14">
       <div className="grid-bg pointer-events-none absolute inset-0" />
 
-      <div className="shell relative pb-16 pt-14 sm:pb-24 sm:pt-24">
+      <div className="shell relative pb-12 pt-10 sm:pb-16 sm:pt-16">
         {/* boot log */}
-        <div className="mb-10 min-h-[132px] font-display text-[11px] leading-[1.9] sm:min-h-[150px] sm:text-[12.5px]">
+        <div className="mb-8 min-h-[124px] font-display text-[11px] leading-[1.9] sm:min-h-[142px] sm:text-[12.5px]">
           {BOOT.map((b, i) => {
             if (i > line) return null
             const typing = i === line
@@ -61,13 +61,7 @@ export default function Hero() {
                 ) : (
                   <>
                     <span className="hidden flex-1 translate-y-[-3px] border-b border-dotted border-line2 sm:block" />
-                    <span
-                      className={
-                        b.warn ? 'text-amber' : 'text-phos'
-                      }
-                    >
-                      [{b.r}]
-                    </span>
+                    <span className={b.warn ? 'text-amber' : 'text-phos'}>[{b.r}]</span>
                   </>
                 )}
               </div>
@@ -75,41 +69,32 @@ export default function Hero() {
           })}
         </div>
 
-        {/* headline */}
-        <div
-          className="max-w-[19ch] sm:max-w-[16ch]"
-          style={{
-            opacity: done ? 1 : 0,
-            transform: done ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 700ms ease-out 120ms, transform 700ms cubic-bezier(.2,.7,.3,1) 120ms',
-          }}
-        >
-          <h1 className="font-display text-[42px] font-extrabold uppercase leading-[0.93] tracking-[-0.045em] text-white sm:text-[76px] lg:text-[92px]">
-            The line
-            <br />
-            prints
-            <br />
-            <span className="text-phos glow">before</span>
-            <br />
-            the move.
-          </h1>
-        </div>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center">
+          {/* left: headline + copy + cta */}
+          <div
+            style={{
+              opacity: done ? 1 : 0,
+              transform: done ? 'translateY(0)' : 'translateY(16px)',
+              transition:
+                'opacity 700ms ease-out 100ms, transform 700ms cubic-bezier(.2,.7,.3,1) 100ms',
+            }}
+          >
+            <h1 className="font-display text-[42px] font-extrabold uppercase leading-[0.93] tracking-[-0.045em] text-white sm:text-[64px] lg:text-[72px]">
+              The line
+              <br />
+              prints{' '}
+              <span className="text-phos glow">before</span>
+              <br />
+              the move.
+            </h1>
 
-        <div
-          className="mt-9 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-end"
-          style={{
-            opacity: done ? 1 : 0,
-            transition: 'opacity 700ms ease-out 380ms',
-          }}
-        >
-          <div>
-            <p className="lead max-w-[54ch]">
+            <p className="lead mt-7 max-w-[50ch]">
               Thirteen traders spent four years compressing what they see into one thing
               your chart can draw by itself. You don't read the market anymore. You read
               the line, you place the order, you close the laptop.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <a
                 href={waLink()}
                 target="_blank"
@@ -129,15 +114,21 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* margin note — reads like a man-page footer */}
-          <aside className="border-l border-line pl-5 lg:pl-6">
-            <p className="label mb-3 text-phos/60">Read before you ask</p>
-            <p className="text-[13px] leading-[1.8] text-mute">
-              This isn't a signal group and nobody is going to trade your account for
-              you. You get the tool, the numbers it prints, and a human on the other end
-              of the line when you get it wrong.
+          {/* right: the self-drawing chart */}
+          <div
+            style={{
+              opacity: done ? 1 : 0,
+              transform: done ? 'translateY(0)' : 'translateY(24px)',
+              transition:
+                'opacity 800ms ease-out 320ms, transform 800ms cubic-bezier(.2,.7,.3,1) 320ms',
+            }}
+          >
+            <LiveChart />
+            <p className="mt-3 border-l border-line pl-4 text-[12.5px] leading-[1.7] text-mute">
+              This isn't a signal group and nobody trades your account for you. You get the
+              tool, the numbers it prints, and a human on the line when you get it wrong.
             </p>
-          </aside>
+          </div>
         </div>
       </div>
     </section>

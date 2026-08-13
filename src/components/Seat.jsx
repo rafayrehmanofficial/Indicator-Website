@@ -17,7 +17,7 @@ const EXCLUDED = [
 
 export default function Seat() {
   return (
-    <section id="seat" className="shell py-20 sm:py-28">
+    <section id="seat" className="shell py-16 sm:py-24">
       <SectionHead
         path="~/seat"
         title="One seat. One price."

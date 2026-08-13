@@ -42,7 +42,7 @@ export default function Proof() {
   }, [open])
 
   return (
-    <section id="proof" className="shell py-20 sm:py-28">
+    <section id="proof" className="shell py-16 sm:py-24">
       <SectionHead
         path="~/tape/archive"
         title="Screens from the desk"

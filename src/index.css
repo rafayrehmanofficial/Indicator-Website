@@ -142,14 +142,16 @@
   html {
     scroll-behavior: auto;
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+  /* Keep the signature product motion (tape, chart, ticker) — these ARE the
+     content — but drop the flashing decorative layers for comfort. */
+  .crt,
+  .animate-flicker {
+    animation: none !important;
   }
   .crt {
     display: none;
+  }
+  .animate-slideup {
+    animation-duration: 0.001ms !important;
   }
 }

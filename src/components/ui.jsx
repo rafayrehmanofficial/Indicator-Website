@@ -33,10 +33,7 @@ export function useCountUp(target, duration = 1400) {
     if (!node) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      setValue(target)
-      return
-    }
+    const dur = reduce ? 500 : duration
 
     const obs = new IntersectionObserver(
       (entries) => {
@@ -45,7 +42,7 @@ export function useCountUp(target, duration = 1400) {
           done.current = true
           const start = performance.now()
           const tick = (now) => {
-            const t = Math.min((now - start) / duration, 1)
+            const t = Math.min((now - start) / dur, 1)
             const eased = 1 - Math.pow(1 - t, 3)
             setValue(Math.round(target * eased))
             if (t < 1) requestAnimationFrame(tick)

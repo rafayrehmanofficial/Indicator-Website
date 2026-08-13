@@ -28,7 +28,7 @@ const NAMES = [
 
 export default function Method() {
   return (
-    <section id="method" className="shell py-20 sm:py-28">
+    <section id="method" className="shell py-16 sm:py-24">
       <SectionHead
         path="~/engine/sequence"
         title="Three moves, in order"

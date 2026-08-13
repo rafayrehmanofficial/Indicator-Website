@@ -40,7 +40,7 @@ export default function Faq() {
   const [open, setOpen] = useState(0)
 
   return (
-    <section className="shell py-20 sm:py-28">
+    <section className="shell py-16 sm:py-24">
       <SectionHead path="~/faq" title="Before you message us" />
 
       <div className="border-t border-line">

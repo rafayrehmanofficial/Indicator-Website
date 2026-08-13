@@ -48,7 +48,7 @@ export default function Qualify() {
   const [ref, verified] = useSequentialTicks(CHECKS.length)
 
   return (
-    <section id="access" className="shell py-20 sm:py-28">
+    <section id="access" className="shell py-16 sm:py-24">
       <SectionHead
         path="~/access/control"
         title="Access is granted, not sold"
