@@ -5,7 +5,7 @@
 
 // WhatsApp number in full international format, digits only.
 // Example: Pakistan +92 300 1234567  ->  "923001234567"
-export const WHATSAPP_NUMBER = '923001234567'
+export const WHATSAPP_NUMBER = '923144481259'
 
 // The message that gets pre-filled when someone taps a CTA.
 export const WHATSAPP_MESSAGE =
